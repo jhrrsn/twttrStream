@@ -32,25 +32,30 @@ def home_page():
 	timestamps = range(int(t0), int(t1))
 	
 	tweets = []
+	coords = []
 	count = 0
 	
 	for i in range(int(t0), int(t1)):
-		entry = dict({'key' : count, 'value' : 0})
-		tweets.append(entry)
+		tw = dict({'key' : count, 'value' : 0})
+		tweets.append(tw)
 		count += 1
-	
-	print tweets
 	
 	for doc in cursor:
 		try:
-			tweetIndex = timestamps.index(doc["time"])
+			tweetIndex = timestamps.index(doc['time'])
 			for pair in tweets:
 				if pair["key"] == tweetIndex:
-					pair["value"] = doc["tweets"]
+					pair["value"] = doc['tweets']
+					for coord in doc['coords']:
+						coords.append(coord)
+								
 		except:
 			print "Not in range."
+			
+	for coord in coords:
+		print coord
 	
-	return bottle.template('home', {'tweets' : tweets, 'period' : period})
+	return bottle.template('home', {'tweets' : tweets, 'coords' : coords, 'period' : period})
 
 
 bottle.debug(True)

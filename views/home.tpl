@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <title>D3 Twitter Test</title>
         <script type="text/javascript" src="http://d3js.org/d3.v2.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
         <script type="text/javaScript">
 			function timedRefresh(timeoutPeriod) {
 			 setTimeout("window.location.reload(true);",timeoutPeriod);
@@ -26,27 +27,77 @@
         	.axis text {
         		font-family: sans-serif;
         		font-size: 11px;
-        	}  	
+        	}
+        	
+        	h1 {
+        		font-family: sans-serif;
+        		font-size: 22px;
+        	}
+        	
+        	hr {
+        		stroke: black;
+        	}
         </style>
     </head>
-    <body onload="timedRefresh(5000);">
-    	<h1>Tweet-O-Meter</h1>
-    	<h3>Number of geolocated tweets per second in London, UK</h3>
-    	   	
+    <body onload="timedRefresh(5000);">    	
+    	<h1 align="center">Tweet-O-Meter</h1>
+    	
+    	<hr>
+    	
+    	<!--                             -->
+    	<!--                             -->
+    	<!-- Tweet location scatter plot -->
+    	<script type="text/javascript" align="center">
+    		var w = $("body").width();
+    		var h = 400;
+    		var verticalPadding = 20;
+    		var horizontalPadding = 400;
+    		var nSeconds = {{period}};
+    		
+    		var dataset = {{!coords}};    		
+    		
+    		var xScale = d3.scale.linear()
+				.domain([-0.489, 0.236])
+				.range([horizontalPadding, w - horizontalPadding])
+				.nice();
+
+			var yScale = d3.scale.linear()
+				.domain([51.280, 51.686])
+				.range([h - verticalPadding, verticalPadding])
+				.nice();
+    		
+    		var svg = d3.select("body")
+    			.append("svg")
+    			.attr("width", w)
+    			.attr("height", h);
+    		
+    		svg.selectAll("circle")
+    			.data(dataset)
+    			.enter()
+    			.append("circle")
+    			.attr("cx", function(d) {
+    				return xScale(d[0]);
+    			})
+    			.attr("cy", function(d) {
+					return yScale(d[1]);
+				})
+				.attr("r", 1)
+				.attr("fill", "steelblue");
+    		
+    	</script>
+    	
+    	<hr>
+    	
+    	<!--                          -->
+    	<!--                          -->
+    	<!-- Twitter volume line plot -->
     	<script type="text/javascript"> 
-    		var w = 1000;
-    		var h = 200;
-    		var barPadding = 1;
+    		var w = $("body").width();
+    		var h = 100;
     		var padding = 20;
     		var nSeconds = {{period}};
 
-    		var dataset = {{!tweets}}
-    		console.log(dataset);
-			
-    		
-    		var key = function(d) {
-				return d.key;
-			};
+    		var dataset = {{!tweets}};
     		
     		var xScale = d3.scale.linear()
 							.domain([0, nSeconds])
@@ -70,7 +121,6 @@
 					return xScale(i); 
 				})
 				.y(function(d) {
-					console.log(yScale(d.value)); 
 					return yScale(d.value);
 				});
 			
