@@ -1,18 +1,52 @@
 import bottle
 from pymongo import Connection
+from time import time
+
 		
 ##
 ## Set up connection to MongoDB
-connection = Connection('localhost', 27017)
-testr = connection.test
-smplDB = testr.sample
+connection = Connection()
+db = connection.twitterstream
 
 ##
 ## Set up bottle site paths & associated scripts
 @bottle.route('/')
 def home_page():
-	values = smplDB.find_one()["nums"]
-	return bottle.template('home', {'nums' : values})
+	## Calculate current time
+	time_full = time()
+	time_round = "{0:.0f}".format(time_full)
+	t1 = float(time_round)-1
+	
+	## Pull last 100 seconds
+	cursor = db.posts.find({"time" : {"$gte" : t1-60}}).sort("time", -1).limit(60)
+	
+	## Write number of tweets to array
+	t0 = t1-50
+	print t0
+	print t1
+	print "--------------"
+	timestamps = range(int(t0), int(t1))
+	print timestamps
+	print "--------------"
+	tweets = []
+	for i in range(int(t1) - int(t0)):
+		tweets.append(0)
+	for doc in cursor:
+		try:
+			tweetIndex = timestamps.index(doc["time"])
+			tweets[tweetIndex] = doc["tweets"]
+		except:
+			print "Not in range."
+	
+	for tweet in tweets:
+		print tweet
+	
+	return bottle.template('home', {'tweets' : tweets})
+
+@bottle.route('/refresh/', method='POST')
+def refresh():
+	bottle.redirect('/')
+
 
 bottle.debug(True)
 bottle.run(host = 'localhost', port = 8080)
