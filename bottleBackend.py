@@ -8,6 +8,11 @@ from time import time
 connection = Connection()
 db = connection.twitterstream
 
+
+##
+## Define time period
+period = 60;
+
 ##
 ## Set up bottle site paths & associated scripts
 @bottle.route('/')
@@ -18,34 +23,34 @@ def home_page():
 	t1 = float(time_round)-1
 	
 	## Pull last 100 seconds
-	cursor = db.posts.find({"time" : {"$gte" : t1-70}}).sort("time", -1).limit(70)
+	cursor = db.posts.find({"time" : {"$gte" : t1-(period+10)}}).sort("time", -1).limit(period+10)
 	
 	## Write number of tweets to array
-	t0 = t1-61
+	t0 = t1-(period+1)
 	print t0
 	print t1
-	print "--------------"
 	timestamps = range(int(t0), int(t1))
-	print timestamps
-	print "--------------"
+	
 	tweets = []
-	for i in range(int(t1) - int(t0)):
-		tweets.append(0)
+	count = 0
+	
+	for i in range(int(t0), int(t1)):
+		entry = dict({'key' : count, 'value' : 0})
+		tweets.append(entry)
+		count += 1
+	
+	print tweets
+	
 	for doc in cursor:
 		try:
 			tweetIndex = timestamps.index(doc["time"])
-			tweets[tweetIndex] = doc["tweets"]
+			for pair in tweets:
+				if pair["key"] == tweetIndex:
+					pair["value"] = doc["tweets"]
 		except:
 			print "Not in range."
 	
-	for tweet in tweets:
-		print tweet
-	
-	return bottle.template('home', {'tweets' : tweets})
-
-@bottle.route('/refresh/', method='POST')
-def refresh():
-	bottle.redirect('/')
+	return bottle.template('home', {'tweets' : tweets, 'period' : period})
 
 
 bottle.debug(True)
