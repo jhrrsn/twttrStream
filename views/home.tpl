@@ -5,6 +5,12 @@
         <title>D3 Test - Home</title>
         <script type="text/javascript" src="http://d3js.org/d3.v2.js"></script>
         <style type="text/css">
+        	path {
+				stroke: steelblue;
+				stroke-width: 1;
+				fill: none;
+			}
+			
         	.axis path,
         	.axis line {
         		fill: none;
@@ -15,7 +21,7 @@
         	.axis text {
         		font-family: sans-serif;
         		font-size: 11px;
-        	}     	
+        	}  	
         </style>
     </head>
     <body>
@@ -30,9 +36,10 @@
     		
     		var dataset = {{!tweets}};
     		
-    		var xScale = d3.scale.ordinal()
-							.domain(d3.range(dataset.length))
-							.rangeRoundBands([padding, w - padding], 0.05);
+    		var xScale = d3.scale.linear()
+							.domain([0, 60])
+							.range([padding, w - padding])
+							.nice();
 
 			var yScale = d3.scale.linear()
 							.domain([0, d3.max(dataset)])
@@ -46,65 +53,35 @@
     			.attr("width", w)
     			.attr("height", h);
     			
-    		svg.selectAll("circle")
-    			.data(dataset)
-    			.enter()
-    			.append("circle")
-    			.attr("cx", function(d, i) {
-    				return xScale(i);
-    			})
-    			.attr("cy", function(d) {
-    				return yScale(d);
-    			})
-    			.attr("r", 2);
-    		
+    		var line = d3.svg.line()
+				.x(function(d, i) { 
+					return xScale(i); 
+				})
+				.y(function(d) {
+					return yScale(d); 
+				});
+			
+			svg.append("svg:path").attr("d", line(dataset));
+			
+			var xAxis = d3.svg.axis()
+    			.scale(xScale)
+    			.orient("bottom")
+    			.ticks(10);
+
     		var yAxis = d3.svg.axis()
     			.scale(yScale)
     			.orient("left")
     			.ticks(4);
+    			
+    		svg.append("g")
+    			.attr("class", "axis")
+    			.attr("transform", "translate(0, " + (h - padding) + ")")
+    			.call(xAxis);
     		
     		svg.append("g")
     			.attr("class", "axis")
     			.attr("transform", "translate(" + 20 + ",0)")
-    			.call(yAxis)
-    		
-    		//
-    		// UPDATE
-    		// d3.select("h3")
-//     			.on("click", function() {
-//     				
-//     				// Refresh data
-//     				var dataset = {{!tweets}};
-//     				console.log(dataset);
-//     				
-//     				// Update scales
-//     				xScale.domain(d3.range(dataset.length));
-// 					yScale.domain([0, d3.max(dataset)]);
-// 					
-// 					// Select * & move points
-// 					var points = svg.selectAll("circle")
-// 						.data(dataset);
-// 						
-// 					points.enter()
-// 						.append("circle")
-// 						.attr("cx", function(d, i) {
-//     						return xScale(i);
-// 						})
-// 						.attr("cy", function(d) {
-// 							return h - yScale(d);
-// 						})
-// 						.attr("r", 2);
-// 						
-// 					points.transition()
-// 						.duration(500)
-// 						.attr("cx", function(d, i) {
-//     						return xScale(i);
-// 						})
-// 						.attr("cy", function(d) {
-// 							return h - yScale(d);
-// 						})
-// 						.attr("r", 2);
-//     			})
+    			.call(yAxis);
     	</script>
     	<form action='/refresh/' method='post'>
         <input type="submit" value="Refresh Values" />

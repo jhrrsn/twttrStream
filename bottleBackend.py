@@ -18,10 +18,10 @@ def home_page():
 	t1 = float(time_round)-1
 	
 	## Pull last 100 seconds
-	cursor = db.posts.find({"time" : {"$gte" : t1-60}}).sort("time", -1).limit(60)
+	cursor = db.posts.find({"time" : {"$gte" : t1-70}}).sort("time", -1).limit(70)
 	
 	## Write number of tweets to array
-	t0 = t1-50
+	t0 = t1-61
 	print t0
 	print t1
 	print "--------------"
