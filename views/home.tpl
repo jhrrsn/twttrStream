@@ -2,150 +2,54 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>D3 Twitter Test</title>
-        <script type="text/javascript" src="http://d3js.org/d3.v2.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
-        <script type="text/javaScript">
-			function timedRefresh(timeoutPeriod) {
-			 setTimeout("window.location.reload(true);",timeoutPeriod);
-			}
-		</script>
+        <title>Twitter Keyword Search</title>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
         <style type="text/css">
-        	path {
-				stroke: steelblue;
-				stroke-width: 1;
-				fill: none;
-			}
-			
-        	.axis path,
-        	.axis line {
-        		fill: none;
-        		stroke: black;
-        		shape-rendering: crispEdges;
+        	html, body
+        	{
+        		font-family : sans-serif;
+        		font-size : 12px;
+        		margin : 0px;
+        		padding : 0px;
+        		margin-top: 0px;
+        		background-color : #fafafa;
         	}
         	
-        	.axis text {
-        		font-family: sans-serif;
-        		font-size: 11px;
+        	div
+        	{
+        		width : 850px;
+        		height : 800px;
+        		margin:0 auto;
+        		background-color : #f0f0f0;
+        		border-left : 1px dotted #999999;
+        		border-right : 1px dotted #999999;
         	}
         	
-        	h1 {
-        		font-family: sans-serif;
-        		font-size: 22px;
+        	h1 
+        	{
+        		font-size : 24px;
+        		margin : 0px;
         	}
         	
-        	hr {
-        		stroke: black;
+        	h3
+        	{
+        		font-weight : lighter;
+        		font-size: 15px;
         	}
         </style>
     </head>
-    <body onload="timedRefresh(5000);">    	
-    	<h1 align="center">Tweet-O-Meter</h1>
-    	
-    	<hr>
-    	
-    	<!--                             -->
-    	<!--                             -->
-    	<!-- Tweet location scatter plot -->
-    	<script type="text/javascript" align="center">
-    		var w = $("body").width();
-    		var h = 400;
-    		var verticalPadding = 20;
-    		var horizontalPadding = 400;
-    		var nSeconds = {{period}};
-    		
-    		var dataset = {{!coords}};    		
-    		
-    		var xScale = d3.scale.linear()
-				.domain([-0.489, 0.236])
-				.range([horizontalPadding, w - horizontalPadding])
-				.nice();
-
-			var yScale = d3.scale.linear()
-				.domain([51.280, 51.686])
-				.range([h - verticalPadding, verticalPadding])
-				.nice();
-    		
-    		var svg = d3.select("body")
-    			.append("svg")
-    			.attr("width", w)
-    			.attr("height", h);
-    		
-    		svg.selectAll("circle")
-    			.data(dataset)
-    			.enter()
-    			.append("circle")
-    			.attr("cx", function(d) {
-    				return xScale(d[0]);
-    			})
-    			.attr("cy", function(d) {
-					return yScale(d[1]);
-				})
-				.attr("r", 1)
-				.attr("fill", "steelblue");
-    		
-    	</script>
-    	
-    	<hr>
-    	
-    	<!--                          -->
-    	<!--                          -->
-    	<!-- Twitter volume line plot -->
-    	<script type="text/javascript"> 
-    		var w = $("body").width();
-    		var h = 100;
-    		var padding = 20;
-    		var nSeconds = {{period}};
-
-    		var dataset = {{!tweets}};
-    		
-    		var xScale = d3.scale.linear()
-							.domain([0, nSeconds])
-							.range([padding, w - padding])
-							.nice();
-
-			var yScale = d3.scale.linear()
-							.domain([0, d3.max(dataset, function(d) {return d.value;})])
-							.range([h - padding, padding])
-							.nice();
+    <body align="center" marginwidth="0" marginheight="0">
+    	<div>
+			<br>
+			<h1>The Fantastical, Historical & Geographical Twitter Keyword Profiler</h1>
+			<h3>Geographical Coverage: <b>United Kingdom</b></h3>
+			<img src="https://twitter.com/images/resources/twitter-bird-light-bgs.png" width="100" height="100">
 			
-			
-			
-    		var svg = d3.select("body")
-    			.append("svg")
-    			.attr("width", w)
-    			.attr("height", h);
-    			
-    		var line = d3.svg.line()
-				.x(function(d, i) { 
-					return xScale(i); 
-				})
-				.y(function(d) {
-					return yScale(d.value);
-				});
-			
-			svg.append("svg:path")
-				.attr("d", line(dataset));
-			
-			var xAxis = d3.svg.axis()
-    			.scale(xScale)
-    			.orient("bottom")
-    			.ticks(10);
-
-    		var yAxis = d3.svg.axis()
-    			.scale(yScale)
-    			.orient("left")
-    			.ticks(4);
-    			
-    		svg.append("g")
-    			.attr("class", "axis")
-    			.attr("transform", "translate(0, " + (h - padding) + ")")
-    			.call(xAxis);
-    		
-    		svg.append("g")
-    			.attr("class", "axis")
-    			.attr("transform", "translate(" + 20 + ",0)")
-    			.call(yAxis);
-    	</script>
+			<br>
+			Enter a <b>keyword</b> and hit <b>return.</b>
+			<p>
+			<form action = "/results" method = "post">
+			<input type = "text" name = "keyword" size = "12" value = "">
+		</div>
     </body>
 </html>
