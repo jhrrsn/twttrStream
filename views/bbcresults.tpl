@@ -15,6 +15,7 @@
         		padding : 0px;
         		margin-top: 0px;
         		background-color : #fafafa;
+        		text-transform:uppercase;
         	}
         	
         	#main
@@ -190,10 +191,12 @@
 				<br>
 				<img src="https://twitter.com/images/resources/twitter-bird-light-bgs.png" width="50" height="50">
 				<br>
-				THE NUMBER OF TWEETS WITH THE KEYWORD
+				THE NUMBER OF TWEETS WITH THE KEYWORDS
 				<p>
-				<div class="twitterblue"> {{keyword}} </div>
+				%for word in keyword: 
+					<div class="twitterblue"> {{word}} </div>
 				<p>
+				%end
 				IS
 				<p>
 				<div class="twitterblue" id="background"> {{results}} </div>

@@ -18,7 +18,7 @@ def results():
 	keyword = bottle.request.forms.get('keyword')
 	docs = db.posts.find({'keywords' : keyword.lower()}).sort("time", 1)
 	numDocs = docs.count()
-	print numDocs
+
 	minTime = 0
 	maxTime = 0
 	coords = []
@@ -36,9 +36,12 @@ def results():
 		first = False
 		loc = [doc["coords"][1], doc["coords"][0]]
 		loc.extend([doc["time"]])
+		loc.extend([doc["_id"].encode()])
+		loc.extend([doc["name"].encode()])
 		coords.append(loc)
 	
 	return bottle.template('results', {'keyword' : keyword.upper(), 'results' : numDocs, 'coords' : coords, 'minTime' : minTime, 'maxTime' : maxTime})
+
 
 bottle.debug(True)
 bottle.run(host = 'localhost', port = 8080)

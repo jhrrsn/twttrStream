@@ -36,20 +36,25 @@
         		font-weight : lighter;
         		font-size: 15px;
         	}
+        	
+        	.stupidbig
+        	{
+        		color : #00acf3;
+        	}
         </style>
     </head>
     <body align="center" marginwidth="0" marginheight="0">
     	<div>
 			<br>
-			<h1>The Fantastical, Historical & Geographical Twitter Keyword Profiler</h1>
-			<h3>Geographical Coverage: <b>United Kingdom</b></h3>
+			<h1 class = "stupidbig">THE TWITTER KEYWORD SPATIAL PROFILER</h1>
+			<h3><small>GEOGRAPHICAL COVERAGE:</small> <b>UK & IRELAND</b></h3>
 			<img src="https://twitter.com/images/resources/twitter-bird-light-bgs.png" width="100" height="100">
 			
 			<br>
-			Enter a <b>keyword</b> and hit <b>return.</b>
-			<p>
 			<form action = "/results" method = "post">
 			<input type = "text" name = "keyword" size = "12" value = "">
+			<p>
+			<small>ENTER A</small> <b class="stupidbig">KEYWORD</b> <small>AND HIT</small> <b class="stupidbig">RETURN.</b>
 		</div>
     </body>
 </html>

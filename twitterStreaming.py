@@ -5,7 +5,7 @@ from nltk.corpus import stopwords
 
 # Establish stopwords for keyword extraction
 stopwords_edited = stopwords.words('english')
-stopwords_edited.extend(['lol', 'As', "im", "its", 'ive', 'yeah', 'you', 'i', 'gotta', 'ha', 'haha', 'x', 'u', 'oh', "don't", 'dont', 'xxx', 'get', '2', "that's", 'one', 'see', 'made', 'ever', 'someone', 'come', 'take', '@', '&amp;', ':)', ':(', 'would', 'need', 'know', 'go', 'got', '-', 'de', 'still', 'well', ';)', '!', "can't", 'xx', '?', '.', ',', 'much', 'done', 'ill', 'la', 'way', 'say', ':D', ':-)'])
+stopwords_edited.extend(['lol', 'As', "im", "its", 'ive', 'yeah', 'you', 'i', 'gotta', 'ha', 'haha', 'x', 'u', 'oh', "don't", 'dont', 'xxx', 'get', '2', "that's", 'one', 'see', 'made', 'ever', 'someone', 'come', 'take', '@', '&amp;', ':)', ':(', 'would', 'need', 'know', 'go', 'got', '-', 'de', 'still', 'well', ';)', '!', "can't", 'xx', '?', '.', ',', 'much', 'done', 'ill', 'la', 'way', 'say', ':D', ':-)', 'like', 'good', 'going', 'day', 'time', 'today', 'last', 'think', 'back', 'want', 'new', 'people', 'really', 'thanks', 'home', 'night', 'next', 'getting', 'make', 'look', 'never', 'even', 'best', 'could', 'gonna', 'please', 'better', 'thank', 'hahaha', ':d:', 'year', 'always'])
 s=set(stopwords_edited)
 
 STREAM_URL = "https://stream.twitter.com/1/statuses/filter.json"
@@ -43,7 +43,7 @@ def on_tweet(data):
 				keywords.append(kword)
 
 		# Insert tweet to posts db
-		db.posts.insert({"_id" : float(tweet["id"]), "time" : float(time_round), "coords" : coords, "text" : tweet["text"].encode('utf-8'), "name" : tweet["user"]["name"].encode('utf-8'), "keywords" : keywords}) 
+		db.posts.insert({"_id" : str(tweet["id"]), "time" : float(time_round), "coords" : coords, "text" : tweet["text"].encode('utf-8'), "name" : tweet["user"]["screen_name"].encode('utf-8'), "keywords" : keywords}) 
 	
 	except Exception,e:
 		print str(e)
