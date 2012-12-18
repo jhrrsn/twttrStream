@@ -74,6 +74,16 @@
         		margin-left: 5px;
         	}
         	
+        	#article-time
+        	{
+        		margin-top: 20px;
+        	}
+        	
+        	#tick
+        	{
+        		padding-top: 20px;
+        	}
+        	
         	svg
         	{
         		background-image:url('http://oi48.tinypic.com/2uiks45.jpg'); /*black: http://oi48.tinypic.com/21l7leg.jpg*/
@@ -91,6 +101,13 @@
         	.twitterblue
         	{
         		color : #00acf3;
+        	}
+        	
+        	.bbcred
+        	{
+        		color : #900000;
+        		text-decoration:none;
+        		font-weight:bold;
         	}
         </style>
         
@@ -155,6 +172,7 @@
 					return formattedTime;
 				}
 				$(function() {
+					// Set up slider and slide events
 					$( "#slider" ).slider({
 						range: true,
 						min: 0,
@@ -169,8 +187,19 @@
 							$( "#max" ).html("   " + formatTime(max));
 						}
 					});
+					
+					// Format article time & change tick position along slider
+					var articleTime = {{articleTime}};
+					$('#article-time').html("BBC Published: <small>" + formatTime(articleTime) + "</small>");
+					var percentAlongSlider = ((articleTime - minTime) / timeRange) * 100;
+					if (percentAlongSlider > 100) {
+						percentAlongSlider = 100;
+						$('#tick').text(">");
+					}
+					$('#tick').css({'padding-left' : percentAlongSlider + '%'});
 				});
 				
+				// div widths and font sizes for responsive designs.
 				$(function(){
 					$('div#main').css({'height':$(window).height() + 'px'});
 					$('div#sidebar').css({'top':$("svg").height() * 0.14 + 'px'});
@@ -191,15 +220,14 @@
 				<br>
 				<img src="https://twitter.com/images/resources/twitter-bird-light-bgs.png" width="50" height="50">
 				<br>
-				THE NUMBER OF TWEETS WITH THE KEYWORDS
+				GEOLOCATED TWEETS WITH THE KEYWORDS
 				<p>
 				%for word in keyword: 
 					<div class="twitterblue"> {{word}} </div>
 				<p>
 				%end
-				IS
 				<p>
-				<div class="twitterblue" id="background"> {{results}} </div>
+				<div id="background"> ({{results}}) </div>
 			</div>
 			
 			
@@ -325,7 +353,10 @@
 					<div id="max"></div>
 				</div>
 				<p>
-				<div id="slider"></div>
+				<div id="slider">
+					<div id="tick" class="bbcred">^</div>
+				</div>
+				<div id="article-time" class="bbcred"></div>
 				<p>
 				<FORM><INPUT TYPE="button" VALUE="Search Again" onClick="window.location.href='/'"></FORM>
 			</div>
