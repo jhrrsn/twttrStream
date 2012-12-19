@@ -8,11 +8,13 @@ stopwords_edited = stopwords.words('english')
 stopwords_edited.extend(['lol', 'As', "im", "its", 'ive', 'yeah', 'you', 'i', 'gotta', 'ha', 'haha', 'x', 'u', 'oh', "don't", 'dont', 'xxx', 'get', '2', "that's", 'one', 'see', 'made', 'ever', 'someone', 'come', 'take', '@', '&amp;', ':)', ':(', 'would', 'need', 'know', 'go', 'got', '-', 'de', 'still', 'well', ';)', '!', "can't", 'xx', '?', '.', ',', 'much', 'done', 'ill', 'la', 'way', 'say', ':D', ':-)', 'like', 'good', 'going', 'day', 'time', 'today', 'last', 'think', 'back', 'want', 'new', 'people', 'really', 'thanks', 'home', 'night', 'next', 'getting', 'make', 'look', 'never', 'even', 'best', 'could', 'gonna', 'please', 'better', 'thank', 'hahaha', ':d:', 'year', 'always'])
 s=set(stopwords_edited)
 
+# Set up parameters for Twitter filtered stream connection (search terms, location bbox, auth)
 STREAM_URL = "https://stream.twitter.com/1/statuses/filter.json"
 WORDS = "locations=-7.9, 49.6, 2.2, 61.1" #-0.57,51.25,0.37,51.72 (London)
-USER = "PDEPrototyping"
-PASS = "PD3Pr0t0typ1ng"
+USER = "" # Twitter username
+PASS = "" # Twitter password
 
+# Define the function that will be called when a new tweet is received
 def on_tweet(data):
 	try:
 		time_full = time()
@@ -48,9 +50,12 @@ def on_tweet(data):
 	except Exception,e:
 		print str(e)
 
+# Connect to MongoDB
 from pymongo import Connection
 connection = Connection()
 db = connection.twitterstream
+
+# Open up connection to the API endpoint
 conn = pycurl.Curl()
 conn.setopt(pycurl.POST, 1)
 conn.setopt(pycurl.POSTFIELDS, WORDS)
